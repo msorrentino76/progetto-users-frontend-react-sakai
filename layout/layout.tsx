@@ -13,12 +13,26 @@ import { LayoutContext } from './context/layoutcontext';
 import { PrimeReactContext } from 'primereact/api';
 import { ChildContainerProps, LayoutState, AppTopbarRef } from '@/types';
 import { usePathname, useSearchParams } from 'next/navigation';
+import { useAuth } from './context/authcontext'; // <--- IMPORTA IL TUO HOOK
 
 const Layout = ({ children }: ChildContainerProps) => {
+    const { user, loading } = useAuth(); // <--- RECUPERA STATO AUTH
     const { layoutConfig, layoutState, setLayoutState } = useContext(LayoutContext);
     const { setRipple } = useContext(PrimeReactContext);
     const topbarRef = useRef<AppTopbarRef>(null);
     const sidebarRef = useRef<HTMLDivElement>(null);
+
+    const router = useRouter();
+
+    // --- LOGICA DI PROTEZIONE AGGIUNTA ---
+    useEffect(() => {
+        // Se non sta caricando e l'utente è null, manda al login
+        if (!loading && !user) {
+            router.push('/auth/login');
+        }
+    }, [user, loading, router]);
+    // --- FINE LOGICA DI PROTEZIONE ---
+
     const [bindMenuOutsideClickListener, unbindMenuOutsideClickListener] = useEventListener({
         type: 'click',
         listener: (event) => {
@@ -121,6 +135,26 @@ const Layout = ({ children }: ChildContainerProps) => {
         'p-input-filled': layoutConfig.inputStyle === 'filled',
         'p-ripple-disabled': !layoutConfig.ripple
     });
+
+    // =========================================================
+    // 2. ORA (E SOLO ORA) I RETURN CONDIZIONALI
+    // =========================================================
+    // Mentre controlliamo la sessione (loading è true), mostriamo un feedback visivo
+    if (loading) {
+        return (
+            <div className="flex align-items-center justify-content-center min-h-screen">
+                <i className="pi pi-spin pi-spinner" style={{ fontSize: '3rem' }}></i>
+            </div>
+        );
+    }
+
+    if (!user) {
+        return null;
+    }
+
+    // =========================================================
+    // 3. IL RENDER FINALE DEL LAYOUT
+    // =========================================================
 
     return (
         <React.Fragment>

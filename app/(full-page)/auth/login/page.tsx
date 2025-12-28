@@ -9,12 +9,16 @@ import { LayoutContext } from '../../../../layout/context/layoutcontext';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 
-import api from '@/services/api';
+import { authService } from '@/services/authService'; 
+import { useAuth } from '@/layout/context/authcontext';
+
 import { Toast } from 'primereact/toast';
 
 const LoginPage = () => {
 
     const { layoutConfig } = useContext(LayoutContext);
+
+    const { setUser } = useAuth();
 
     const router = useRouter();
     const containerClassName = classNames('surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden', { 'p-input-filled': layoutConfig.inputStyle === 'filled' });
@@ -38,10 +42,8 @@ const LoginPage = () => {
         setErrors({}); // Resetta gli errori ad ogni tentativo
 
         try {
-            await api.get('/sanctum/csrf-cookie');
-            await api.post('/login', userCredentials);
-
-            // 3. Reindirizza l'utente (Sakai usa spesso il router di Next)
+            const resp = await authService.login(userCredentials);
+            setUser(resp.data);
             router.push('/'); 
         } catch (error) {
             if (error.response && error.response.status === 422) {
