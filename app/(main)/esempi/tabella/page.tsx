@@ -15,7 +15,7 @@ const Tabella = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await api.get('/example/tabella');
+                const response = await api.get('/api/example/tabella');
                 setProducts(response.data);
             } catch (error) {
                 console.error(error);
