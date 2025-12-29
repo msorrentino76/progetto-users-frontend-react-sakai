@@ -9,6 +9,8 @@ import { LayoutContext } from './context/layoutcontext';
 import { useAuth } from './context/authcontext';
 import { confirmDialog, ConfirmDialog } from 'primereact/confirmdialog';
 
+import ProfileSidebar from './components/ProfileSidebar';
+
 const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const { layoutConfig, layoutState, onMenuToggle, showProfileSidebar } = useContext(LayoutContext);
     const menubuttonRef = useRef(null);
@@ -22,6 +24,8 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         topbarmenu: topbarmenuRef.current,
         topbarmenubutton: topbarmenubuttonRef.current
     }));
+
+    const [profileVisible, setProfileVisible] = React.useState(false);
 
     const confirmLogout = () => {
         confirmDialog({
@@ -51,16 +55,18 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
             </button>
 
             <div ref={topbarmenuRef} className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}>
+                
+                {/* Altri bottoni del topbar 
                 <button type="button" className="p-link layout-topbar-button">
                     <i className="pi pi-calendar"></i>
                     <span>Calendar</span>
                 </button>
-                <button type="button" className="p-link layout-topbar-button">
+                */}
+
+                <button type="button" className="p-link layout-topbar-button" onClick={() => setProfileVisible(true)}>
                     <i className="pi pi-user"></i>
                     <span>Profile</span>
                 </button>
-
-                <ConfirmDialog />
                 
                 <button type="button" className="p-link layout-topbar-button" onClick={confirmLogout}>
                     <i className="pi pi-sign-out"></i>
@@ -68,6 +74,14 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                 </button>
 
             </div>
+
+            <ProfileSidebar 
+                visible={profileVisible} 
+                onHide={() => setProfileVisible(false)} 
+            />
+
+            <ConfirmDialog />
+
         </div>
     );
 });
