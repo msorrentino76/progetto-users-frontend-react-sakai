@@ -42,9 +42,16 @@ export const authService = {
      * Recupera i dati dell'utente attualmente autenticato.
      * Viene usato all'avvio dell'app per verificare se la sessione è attiva.
      */
-    async getUser() {
+    async getUserProfile() {
         return api.get('/api/user');
     },
 
+    async putUserProfile(userData) {
+        return api.put('/api/user' , userData);
+    },
+
+    async putUserPassword(passwords) {
+        return api.put('/api/user-password', passwords);
+    },
 
 };

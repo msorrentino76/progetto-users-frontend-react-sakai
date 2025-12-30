@@ -11,6 +11,8 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
+    const [refresh, refreshUserInfo] = useState(Date.now());
+
     /**
      * Inizializzazione: al caricamento dell'app (o al refresh F5)
      * verifichiamo se esiste una sessione valida su Laravel.
@@ -19,7 +21,7 @@ export const AuthProvider = ({ children }) => {
         const checkUser = async () => {
             try {
                 // Usiamo il metodo centralizzato del servizio
-                const res = await authService.getUser();
+                const res = await authService.getUserProfile();
                 setUser(res.data);
             } catch (err) {
                 // Se la sessione è scaduta o non esiste, resettiamo l'utente
@@ -31,7 +33,7 @@ export const AuthProvider = ({ children }) => {
         };
 
         checkUser();
-    }, []);
+    }, [refresh]);
 
     /**
      * Funzione di Logout centralizzata
@@ -52,7 +54,8 @@ export const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={{ 
             user, 
-            setUser, 
+            setUser,
+            refreshUserInfo, 
             loading, 
             logout, 
             isAuthenticated: !!user 
