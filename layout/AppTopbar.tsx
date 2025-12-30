@@ -125,7 +125,10 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                     </button>
                     */}
 
-                    <button type="button" className="p-link layout-topbar-button" onClick={() => setProfileVisible(true)}>
+                    <button type="button" className="p-link layout-topbar-button" onClick={() => {
+                        setErrors({});
+                        setProfileVisible(true);
+                    }}>
                         <i className="pi pi-user p-overlay-badge">
                             {!user.changed_first_pwd && <Badge value="!" severity="danger"></Badge>}
                         </i>

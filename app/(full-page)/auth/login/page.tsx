@@ -37,6 +37,25 @@ const LoginPage = () => {
 
     const onLogin = async (e: { preventDefault: () => void; }) => {
 
+        let _errors = {};
+
+        // Validazione Email
+        if (!userCredentials.email) {
+            _errors.email = ["L'email è obbligatoria"];
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userCredentials.email)) {
+            _errors.email = ["Formato email non valido"];
+        }
+
+        // Validazione Password (esempio)
+        if (!userCredentials.password || userCredentials.password.length < 6) {
+            _errors.password = ["La password deve contenere almeno 6 caratteri"];
+        }
+
+        if (Object.keys(_errors).length > 0) {
+            setErrors(_errors);
+            return;
+        }
+
         setLoading(true);
 
         setErrors({}); // Resetta gli errori ad ogni tentativo
@@ -139,13 +158,17 @@ const LoginPage = () => {
                                     <Checkbox inputId="rememberme1" checked={checked} onChange={(e) => setChecked(e.checked ?? false)} className="mr-2"></Checkbox>
                                     <label htmlFor="rememberme1">Remember me</label>
                                 </div>
-                                <a className="font-medium no-underline ml-2 text-right cursor-pointer" style={{ color: 'var(--primary-color)' }}>
-                                    Forgot password?
-                                </a>
                             </div>
                             */}
 
+                            <div className="flex align-items-center justify-content-between mb-5 gap-5">
+                                <a className="font-medium no-underline ml-2 text-right cursor-pointer" style={{ color: 'var(--primary-color)' }}>
+                                    Se hai dimenticato la password, <a href='mailto:admin@example.com'><u>contatta l'amministratore.</u></a>
+                                </a>
+                            </div>
+
                             <Button label="Accedi" loading={loading} onClick={onLogin} className="w-full p-3 text-xl"></Button>
+
                         </div>
                     </div>
                 </div>
