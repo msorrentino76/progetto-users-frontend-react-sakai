@@ -1,19 +1,39 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import React, { use, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import AppMenuitem from './AppMenuitem';
-import { LayoutContext } from './context/layoutcontext';
 import { MenuProvider } from './context/menucontext';
-import Link from 'next/link';
 import { AppMenuItem } from '@/types';
 
-const AppMenu = () => {
-    const { layoutConfig } = useContext(LayoutContext);
+import { useAuth } from '@/layout/context/authcontext';
 
-    const model: AppMenuItem[] = [
+const AppMenu = () => {
+
+    const { user, loading } = useAuth();
+
+    const isAdmin = user?.roles.includes('admin');
+    const isBackoffice = user?.roles.includes('backoffice');
+
+    const [menuItems, setMenuItems] = useState<AppMenuItem[]>([]);
+
+    useEffect(() => {
+        if (loading) return;
+        if (isAdmin) { setMenuItems(modelMenuAdmin); }
+        if (isBackoffice) { setMenuItems(modelMenuBackoffice); }
+        //else { setMenuItems([]); }
+    }, [user, loading]);
+
+    const modelMenuAdmin: AppMenuItem[] = [
+
         {
             label: 'Home',
             items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
+        },
+        {
+            label: 'Gestione Utenti',
+            items: [
+                { label: 'Utenti', icon: 'pi pi-fw pi-users', to: '/admin/users' },
+            ],
         },
         {
             label: 'Esempi',
@@ -21,45 +41,26 @@ const AppMenu = () => {
                 { label: 'Tabella', icon: 'pi pi-fw pi-id-card', to: '/esempi/tabella' },
             ]
         },
-        {
-            label: 'Pages',
-            icon: 'pi pi-fw pi-briefcase',
-            to: '/pages',
-            items: [
-                {
-                    label: 'Auth',
-                    icon: 'pi pi-fw pi-user',
-                    items: [
-                        {
-                            label: 'Login',
-                            icon: 'pi pi-fw pi-sign-in',
-                            to: '/auth/login'
-                        },
-                        {
-                            label: 'Error',
-                            icon: 'pi pi-fw pi-times-circle',
-                            to: '/auth/error'
-                        },
-                        {
-                            label: 'Access Denied',
-                            icon: 'pi pi-fw pi-lock',
-                            to: '/auth/access'
-                        }
-                    ]
-                },
-                {
-                    label: 'Not Found',
-                    icon: 'pi pi-fw pi-exclamation-circle',
-                    to: '/pages/notfound'
-                },
-            ]
-        },
     ];
 
+    const modelMenuBackoffice: AppMenuItem[] = [
+
+        {
+            label: 'Home',
+            items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
+        },
+        {
+            label: 'Manteinance',
+            items: [
+                { label: 'Logs', icon: 'pi pi-fw pi-users', to: '/backoffice/logs' },
+            ],
+        },
+    ];
+    
     return (
         <MenuProvider>
             <ul className="layout-menu">
-                {model.map((item, i) => {
+                {menuItems.map((item, i) => {
                     return !item?.seperator ? <AppMenuitem item={item} root={true} index={i} key={item.label} /> : <li className="menu-separator"></li>;
                 })}
             </ul>

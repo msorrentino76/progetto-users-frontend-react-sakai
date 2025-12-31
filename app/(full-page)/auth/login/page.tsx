@@ -162,8 +162,8 @@ const LoginPage = () => {
                             */}
 
                             <div className="flex align-items-center justify-content-between mb-5 gap-5">
-                                <a className="font-medium no-underline ml-2 text-right cursor-pointer" style={{ color: 'var(--primary-color)' }}>
-                                    Se hai dimenticato la password, <a href='mailto:admin@example.com'><u>contatta l'amministratore.</u></a>
+                                <a href='mailto:admin@example.com' className="font-medium no-underline ml-2 text-right cursor-pointer" style={{ color: 'var(--primary-color)' }}>
+                                    Se hai dimenticato la password, <u>contatta l'amministratore.</u>
                                 </a>
                             </div>
 
