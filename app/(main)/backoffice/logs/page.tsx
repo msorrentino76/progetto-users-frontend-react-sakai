@@ -15,9 +15,9 @@ const UsersPage = () => {
             <div className="col-12">
                 <div className="card">
 
-                    <h6 className="font-semibold m-0">Log di sistema</h6>
+                    <h5>Log di sistema</h5>
 
-                    <p className="m-0 mt-2 text-600">
+                    <p className="pb-4 text-600">
                         Visualizza e gestisci i log di sistema.
                     </p>
                 </div>

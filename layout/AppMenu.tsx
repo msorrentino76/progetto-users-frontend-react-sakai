@@ -35,12 +35,6 @@ const AppMenu = () => {
                 { label: 'Utenti', icon: 'pi pi-fw pi-users', to: '/admin/users' },
             ],
         },
-        {
-            label: 'Esempi',
-            items: [
-                { label: 'Tabella', icon: 'pi pi-fw pi-id-card', to: '/esempi/tabella' },
-            ]
-        },
     ];
 
     const modelMenuBackoffice: AppMenuItem[] = [
