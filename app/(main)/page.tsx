@@ -25,10 +25,12 @@ export default function RootPage() {
         // 3. Logica di smistamento (Il vero Dispatcher)
         if (user.roles.includes('admin')) {
             router.replace('/admin/dashboard');
+            return;
         } 
         
         if (user.roles.includes('backoffice')) {
             router.replace('/backoffice/dashboard');
+            return;
         }
         
     }, [user, loading, router]);

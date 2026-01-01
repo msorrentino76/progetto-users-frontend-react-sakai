@@ -11,44 +11,42 @@ const AppMenu = () => {
 
     const { user, loading } = useAuth();
 
-    const isAdmin = user?.roles.includes('admin');
+    const isAdmin      = user?.roles.includes('admin');
     const isBackoffice = user?.roles.includes('backoffice');
 
     const [menuItems, setMenuItems] = useState<AppMenuItem[]>([]);
 
     useEffect(() => {
+        let newMenuItems: AppMenuItem[] = [];
         if (loading) return;
-        if (isAdmin) { setMenuItems(modelMenuAdmin); }
-        if (isBackoffice) { setMenuItems(modelMenuBackoffice); }
+        if (isAdmin)      { newMenuItems = [...newMenuItems, ...modelMenuAdmin     ]; } // Mergio i menù per i multi ruoli
+        if (isBackoffice) { newMenuItems = [...newMenuItems, ...modelMenuBackoffice]; } // Mergio i menù per i multi ruoli
         //else { setMenuItems([]); }
+        setMenuItems(newMenuItems);
     }, [user, loading]);
 
     const modelMenuAdmin: AppMenuItem[] = [
 
         {
-            label: 'Home',
-            items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
-        },
-        {
-            label: 'Gestione Utenti',
+            label: 'Menù Amministratore',
             items: [
-                { label: 'Utenti', icon: 'pi pi-fw pi-users', to: '/admin/users' },
-            ],
+                { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/admin/dashboard' },
+                { label: 'Utenti'   , icon: 'pi pi-fw pi-users', to: '/admin/users' },
+            ]
         },
+
     ];
 
     const modelMenuBackoffice: AppMenuItem[] = [
 
         {
-            label: 'Home',
-            items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
-        },
-        {
-            label: 'Manteinance',
+            label: 'Menù Backoffice',
             items: [
+                { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/backoffice/dashboard' },
                 { label: 'Logs', icon: 'pi pi-fw pi-users', to: '/backoffice/logs' },
-            ],
+            ]
         },
+
     ];
     
     return (

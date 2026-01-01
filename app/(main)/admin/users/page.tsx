@@ -6,6 +6,8 @@ import { DataTable } from 'primereact/datatable';
 import { Toolbar } from 'primereact/toolbar';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
+import { Dropdown } from 'primereact/dropdown';
+import { FilterMatchMode } from 'primereact/api';
 
 import { useAuth } from '@/layout/context/authcontext';
 import {usersService} from '@/services/admin/usersService';
@@ -74,6 +76,24 @@ const UsersPage = () => {
         );
     };
 
+    const [filters, setFilters] = useState({
+        global:  { value: null, matchMode: FilterMatchMode.CONTAINS },
+        surname: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        name:    { value: null, matchMode: FilterMatchMode.CONTAINS },
+        roles:   { value: null, matchMode: FilterMatchMode.CONTAINS },
+    });
+
+    const [roles] = useState(['admin', 'user']);
+
+    const rolesRowFilterTemplate = (options) => {
+        return (
+            <Dropdown 
+                value={options.value}
+                options={roles}
+                onChange={(e) => options.filterApplyCallback(e.value)}
+                placeholder="Seleziona ruolo" className="p-column-filter" showClear/>
+        );
+    }
     const toast = useRef(null);
 
     const newUser = () => {
@@ -169,14 +189,25 @@ const UsersPage = () => {
                         </p>
 
                         <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
-                        <DataTable stripedRows value={users} paginator rows={10} loading={loading} className="datatable-responsive" emptyMessage="Nessun utente trovato.">
-                            <Column field="title" header="Titolo"></Column>
-                            <Column field="name" header="Nome" sortable></Column>
-                            <Column field="surname" header="Cognome" sortable></Column>
-                            <Column field="roles" header="Ruoli" body={rolesTemplate}></Column>
-                            <Column field="disabled" header="Abilitato" body={disabledTemplate} bodyClassName="text-center" headerStyle={{ width: '5rem', textAlign: 'center' }}></Column>
+                        <DataTable
+                            value={users}
+                            stripedRows
+                            paginator
+                            rows={10}
+                            loading={loading}
+                            className="datatable-responsive"
+                            emptyMessage="Nessun utente trovato."
+                            filterDisplay="row"
+                            filters={filters}                       // <--- Usa lo stato dei filtri
+                            onFilter={(e) => setFilters(e.filters)} // <--- Aggiorna lo stato al cambio
+                        >
+                            {/* <Column field="title" header="Titolo"></Column> */}
+                            <Column field="surname" filter filterPlaceholder="Cognome" showFilterMenu={false} header="Cognome" sortable></Column>
+                            <Column field="name"    filter filterPlaceholder="Nome" showFilterMenu={false} header="Nome" sortable></Column>                            
+                            <Column field="roles"   filter filterElement={rolesRowFilterTemplate} showFilterMenu={false} header="Ruoli" body={rolesTemplate}></Column>
+                            <Column field="disabled" sortable header="Abilitato" body={disabledTemplate} bodyClassName="text-center" headerStyle={{ width: '5rem', textAlign: 'center' }}></Column>
                             {/* <Column field="updated_at" header="Aggiornato il" body={(rowData) => formatDate(rowData.updated_at)}></Column> */}
-                            <Column header="Azioni" body={actionBodyTemplate} exportable={false}></Column>
+                            <Column header="Azioni" body={actionBodyTemplate} exportable={false} style={{width: '20rem'}}></Column>
                         </DataTable>
 
                     </div>
