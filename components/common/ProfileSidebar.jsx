@@ -11,7 +11,7 @@ import { classNames } from 'primereact/utils';
 import { BlockUI } from 'primereact/blockui';
 import { ProgressSpinner } from 'primereact/progressspinner';
 
-import { useAuth } from '../context/authcontext';
+import { useAuth } from '../../layout/context/authcontext';
 
 const ProfileSidebar = ({ visible,  handleUserSubmit, handlePasswordSubmit, onHide, loadingUserProfile, loadingPassword, errors }) => {
 

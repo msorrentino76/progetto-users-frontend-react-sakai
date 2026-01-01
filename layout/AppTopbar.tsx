@@ -11,7 +11,7 @@ import { useAuth } from '@/layout/context/authcontext';
 
 import { confirmDialog, ConfirmDialog } from 'primereact/confirmdialog';
 import { Badge } from 'primereact/badge';
-import ProfileSidebar from './components/ProfileSidebar';
+import ProfileSidebar from '../components/common/ProfileSidebar';
 
 import { Toast } from 'primereact/toast';
 
