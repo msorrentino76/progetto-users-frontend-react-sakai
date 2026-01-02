@@ -24,11 +24,12 @@ const UsersPage = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
+            setLoading(true);
             try {
                 const response = await usersService.getAllUsers();
                 setUsers(response.data);
             } catch (error) {
-                console.error(error);
+                toast.current.show({severity:'error', summary: 'Errore', detail: 'Errore generico', life: 3000});
             } finally {
                 setLoading(false);
             }
@@ -178,9 +179,9 @@ const UsersPage = () => {
 
     return (
         <>
-            <div className="grid">
-                <div className="col-12">
-                    <div className="card">
+            <div className="card">
+                <div className="grid">
+                    <div className="col-12">
                     
                         <h5>Gestione Utenti</h5>
 
