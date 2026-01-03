@@ -15,6 +15,8 @@ import {usersService} from '@/services/admin/usersService';
 import {_role} from '@/constants/roles';
 
 import Details from '@/components/admin/users/Details';
+import UserForm from '@/components/admin/users/UserForm';
+import { set } from 'react-hook-form';
 
 const UsersPage = () => {
 
@@ -26,6 +28,7 @@ const UsersPage = () => {
     // refreshThis(Date.now());
 
     const [dialogData, setDialogData] = useState(false);
+    const [dialogHeader, setDialogHeader] = useState('');
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -102,16 +105,43 @@ const UsersPage = () => {
     }
     const toast = useRef(null);
 
+    const handleSave = async (userData, userId, setError) => {
+        try {
+            await usersService.saveUser(userId, userData);
+            toast.current.show({severity:'success', summary: 'Successo', detail: 'Operazione conclusa con successo', life: 3000});
+            refreshThis(Date.now());
+            setDialogData(false);
+        } catch (error) {
+            if (error.response && error.response.status === 422) {
+                //toast.current.show({severity:'error', summary: 'Errore', detail: error.response.data.message, life: 3000});
+                const serverErrors = error.response.data.errors; // Laravel risponde con un oggetto 'errors'
+                
+                // Cicliamo gli errori che arrivano dal server
+                Object.keys(serverErrors).forEach((fieldName) => {
+                    setError(fieldName, {
+                        type: 'server',
+                        message: serverErrors[fieldName][0] // Prende il primo messaggio (es: "Email già presente")
+                    });
+                });
+            } else {
+                console.error('Errore generico:', error);
+                toast.current.show({severity:'error', summary: 'Errore', detail: 'Errore generico', life: 3000});
+            }
+        }
+    };
     const newUser = () => {
         // Logica per creare un nuovo utente
-        console.log('Nuovo utente');
+        setDialogHeader('Nuovo Utente');
+        setDialogData(<UserForm onSubmit={(userData, setError) => handleSave(userData, null, setError)} />);
     }
     const editUser = (user) => {
         // Logica per modificare l'utente
-        console.log('Modifica utente:', user);
+        setDialogHeader('Modifica Utente');
+        setDialogData(<UserForm onSubmit={(userData, setError) => handleSave(userData, user.id, setError)} initialData={user}/>);
     }
     const detailsUser = (user) => {
         // Logica per visualizzare i dettagli dell'utente
+        setDialogHeader('Dettaglio Utente');
         setDialogData(<Details user={user} />);
     }
     const toggleBan = (user) => {
@@ -246,10 +276,8 @@ const UsersPage = () => {
                 </div>
             </div>
             <Toast ref={toast} />
-            <Dialog header="Dettaglio utente" visible={dialogData} style={{ width: '50vw' }} onHide={() => {if (!dialogData) return; setDialogData(false); }}>
-                <p className="m-0">
-                    {dialogData}
-                </p>
+            <Dialog header={dialogHeader} visible={dialogData} style={{ width: '50vw' }} onHide={() => {if (!dialogData) return; setDialogData(false); }}>
+                {dialogData}
             </Dialog>
         </>
     );
