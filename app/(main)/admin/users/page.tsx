@@ -68,12 +68,12 @@ const UsersPage = () => {
                 <Button icon="pi pi-search" size="small" className="mr-2" tooltip="Dettaglio Utente"  severity="info"    tooltipOptions={{ position: 'top' }} onClick={() => detailsUser(rowData)} />
                 <Button icon="pi pi-pencil" size="small" className="mr-2" tooltip="Modifica Utente"                      tooltipOptions={{ position: 'top' }} onClick={() => editUser(rowData)} />
                 {rowData.disabled ?
-                <Button icon="pi pi-user" disabled={rowData.id == user.id} size="small" className="mr-2" tooltip="Abilita Utente"    severity="warning" tooltipOptions={{ position: 'top' }} onClick={() => toggleBan(rowData)} />
+                <Button icon="pi pi-user" disabled={rowData.id == user.id} size="small" className="mr-2" tooltip="Abilita Utente"    severity={rowData.id == user.id ? 'secondary' : 'warning'} tooltipOptions={{ position: 'top' }} onClick={() => toggleBan(rowData)} />
                 :
-                <Button icon="pi pi-ban"  disabled={rowData.id == user.id} size="small" className="mr-2" tooltip="Disabilita Utente" severity="warning" tooltipOptions={{ position: 'top' }} onClick={() => toggleBan(rowData)} />
+                <Button icon="pi pi-ban"  disabled={rowData.id == user.id} size="small" className="mr-2" tooltip="Disabilita Utente" severity={rowData.id == user.id ? 'secondary' : 'warning'} tooltipOptions={{ position: 'top' }} onClick={() => toggleBan(rowData)} />
                 }
-                <Button icon="pi pi-trash" disabled={rowData.id == user.id} size="small" className="mr-2" tooltip="Elimina Utente"   severity="danger"  tooltipOptions={{ position: 'top' }} onClick={() => deleteUser(rowData)}/>
-                <Button icon="pi pi-key"    size="small" className="mr-2" tooltip="Resetta Password" severity="success" tooltipOptions={{ position: 'top' }} onClick={() => resetPassword(rowData)}/>
+                <Button icon="pi pi-trash" disabled={rowData.id == user.id} size="small" className="mr-2" tooltip="Elimina Utente"   severity={rowData.id == user.id ? 'secondary' : 'danger'}  tooltipOptions={{ position: 'top' }} onClick={() => deleteUser(rowData)}/>
+                <Button icon="pi pi-key"   disabled={rowData.id == user.id} size="small" className="mr-2" tooltip="Resetta Password" severity={rowData.id == user.id ? 'secondary' : 'success'} tooltipOptions={{ position: 'top' }} onClick={() => resetPassword(rowData)}/>
             </React.Fragment>
         );
     };
@@ -115,13 +115,13 @@ const UsersPage = () => {
         confirmDialog({
             message: user.disabled ? 
                     <>
-                        Sei sicuro di voler abilitare questo utente?
+                        Sei sicuro di voler abilitare l'utente {user.name} {user.surname}?
                         <br/><br/>
                         <span className="font-bold">L'utente potrà accedere nuovamente al sistema.</span>
                     </>
                     : 
                     <>
-                        Sei sicuro di voler disabilitare questo utente?
+                        Sei sicuro di voler disabilitare l'utente {user.name} {user.surname}?
                         <br/><br/>
                         <span className="font-bold">L'utente non verrà rimosso dal sistema ma non potrà accedervi finchè risulta disabilitato.</span>
                     </>,
@@ -150,7 +150,7 @@ const UsersPage = () => {
     const deleteUser = (user) => {
         // Logica per eliminare l'utente
         confirmDialog({
-            message:'Sei sicuro di voler cancellare questo utente?',
+            message: `Sei sicuro di voler cancellare l'utente ${user.name} ${user.surname}?`,
             header: 'Conferma Eliminazione',
             icon: 'pi pi-exclamation-triangle',
             acceptLabel: 'Sì',
@@ -175,7 +175,33 @@ const UsersPage = () => {
     }       
     const resetPassword = (user) => {
         // Logica per resettare la password dell'utente
-        console.log('Resetta password per utente con ID:', user.id);
+        confirmDialog({
+            message:<>
+                       Sei sicuro di voler resettare la password dell'utente {user.name} {user.surname}?
+                        <br/><br/>
+                        <span className="font-bold">L'utente riceverà una nuova password all'email {user.email}.</span>
+                    </>,
+            header: 'Conferma Reset Password',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sì',
+            rejectLabel: 'No',
+            accept: async () => {
+                setLoading(true);
+                try {
+                    await usersService.resetPasswordUser(user.id);
+                    toast.current.show({severity:'success', summary: 'Successo', detail: 'Operazione conclusa con successo', life: 3000});
+                    refreshThis(Date.now());
+                } catch (error) {
+                    if (error.response && error.response.status === 422) {
+                        toast.current.show({severity:'error', summary: 'Errore', detail: error.response.data.message, life: 3000});
+                    } else {
+                        console.error('Errore generico:', error);
+                        toast.current.show({severity:'error', summary: 'Errore', detail: 'Errore generico', life: 3000});
+                    }
+                    setLoading(false);
+                } 
+            }, 
+        });
     }
 
     return (
