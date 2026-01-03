@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/layout/context/authcontext';
 import LastLogin from '@/components/common/LastLogin';
 import LastLog from '@/components/backoffice/LastLog';
+import UserStats from '@/components/stats/UserStats';
 
 const Dashboard = () => {
 
@@ -23,6 +24,12 @@ const Dashboard = () => {
 
             <div className="col-12 lg:col-6 xl:col-3">
                 <LastLog />
+            </div>
+
+            <div className="hidden xl:block xl:col-6"></div>
+
+            <div className="col-12 lg:col-6 xl:col-6">
+                <UserStats hiddenBackoffice={false} />
             </div>
 
         </div>

@@ -12,6 +12,7 @@ import { FilterMatchMode } from 'primereact/api';
 import { useAuth } from '@/layout/context/authcontext';
 import {usersService} from '@/services/admin/usersService';
 import {formatDate} from '@/lib/utils';
+import {_role} from '@/constants/roles';
 
 const UsersPage = () => {
 
@@ -51,7 +52,7 @@ const UsersPage = () => {
     };
 
     const rolesTemplate = (rowData) => {
-        return rowData.roles.join(', ');
+        return rowData.roles.map(role => _role(role).label).join(', ');
     };
 
     const disabledTemplate = (rowData) => {

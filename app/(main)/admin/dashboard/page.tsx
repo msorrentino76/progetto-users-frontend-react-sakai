@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { useAuth } from '@/layout/context/authcontext';
 import LastLogin from '@/components/common/LastLogin';
+import UserStats from '@/components/stats/UserStats';
 
 const Dashboard = () => {
 
@@ -18,6 +19,12 @@ const Dashboard = () => {
 
             <div className="col-12 lg:col-6 xl:col-3">
                 <LastLogin />
+            </div>
+
+            <div className="hidden xl:block xl:col-9"></div>
+
+            <div className="col-12 lg:col-6 xl:col-6">
+                <UserStats hiddenBackoffice={true} />
             </div>
 
         </div>
