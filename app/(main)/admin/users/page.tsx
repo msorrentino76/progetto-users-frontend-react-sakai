@@ -106,13 +106,13 @@ const UsersPage = () => {
         // Logica per creare un nuovo utente
         console.log('Nuovo utente');
     }
-    const detailsUser = (user) => {
-        // Logica per visualizzare i dettagli dell'utente
-        setDialogData(<Details user={user} />);
-    }
     const editUser = (user) => {
         // Logica per modificare l'utente
         console.log('Modifica utente:', user);
+    }
+    const detailsUser = (user) => {
+        // Logica per visualizzare i dettagli dell'utente
+        setDialogData(<Details user={user} />);
     }
     const toggleBan = (user) => {
         // Logica per abilitare/disabilitare l'utente
