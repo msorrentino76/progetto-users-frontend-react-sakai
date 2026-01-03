@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { useAuth } from '@/layout/context/authcontext';
-import LastLogin from '@/components/common/LastLogin';
+import LastLogin from '@/components/common/dashboard/LastLogin';
 import UserStats from '@/components/stats/UserStats';
 
 const Dashboard = () => {

@@ -3,8 +3,8 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { useAuth } from '@/layout/context/authcontext';
-import LastLogin from '@/components/common/LastLogin';
-import LastLog from '@/components/backoffice/LastLog';
+import LastLogin from '@/components/common/dashboard/LastLogin';
+import LastLog from '@/components/backoffice/dashboard/LastLog';
 import UserStats from '@/components/stats/UserStats';
 
 const Dashboard = () => {

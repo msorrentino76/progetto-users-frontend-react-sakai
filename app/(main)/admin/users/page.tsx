@@ -8,11 +8,13 @@ import { confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
 import { Dropdown } from 'primereact/dropdown';
 import { FilterMatchMode } from 'primereact/api';
+import { Dialog } from 'primereact/dialog';
 
 import { useAuth } from '@/layout/context/authcontext';
 import {usersService} from '@/services/admin/usersService';
-import {formatDate} from '@/lib/utils';
 import {_role} from '@/constants/roles';
+
+import Details from '@/components/admin/users/Details';
 
 const UsersPage = () => {
 
@@ -22,6 +24,8 @@ const UsersPage = () => {
     const [loading, setLoading] = useState(true); // stato per il loader
     const [refresh, refreshThis] = useState(Date.now());
     // refreshThis(Date.now());
+
+    const [dialogData, setDialogData] = useState(false);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -104,7 +108,7 @@ const UsersPage = () => {
     }
     const detailsUser = (user) => {
         // Logica per visualizzare i dettagli dell'utente
-        console.log('Dettagli utente:', user);
+        setDialogData(<Details user={user} />);
     }
     const editUser = (user) => {
         // Logica per modificare l'utente
@@ -242,6 +246,11 @@ const UsersPage = () => {
                 </div>
             </div>
             <Toast ref={toast} />
+            <Dialog header="Dettaglio utente" visible={dialogData} style={{ width: '50vw' }} onHide={() => {if (!dialogData) return; setDialogData(false); }}>
+                <p className="m-0">
+                    {dialogData}
+                </p>
+            </Dialog>
         </>
     );
 }
