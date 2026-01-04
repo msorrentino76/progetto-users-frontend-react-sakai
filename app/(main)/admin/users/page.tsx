@@ -12,7 +12,7 @@ import { Dialog } from 'primereact/dialog';
 
 import { useAuth } from '@/layout/context/authcontext';
 import {usersService} from '@/services/admin/usersService';
-import {_role} from '@/constants/roles';
+import {_role, ROLE_TRANSCODER} from '@/constants/roles';
 
 import Details from '@/components/admin/users/Details';
 import UserForm from '@/components/admin/users/UserForm';
@@ -92,7 +92,9 @@ const UsersPage = () => {
         roles:   { value: null, matchMode: FilterMatchMode.CONTAINS },
     });
 
-    const [roles] = useState(['admin', 'user']);
+    const roles = Object.keys(ROLE_TRANSCODER)
+        .filter(key => key !== 'backoffice')
+        .map(key => ({value: key, label:ROLE_TRANSCODER[key].label}));
 
     const rolesRowFilterTemplate = (options) => {
         return (
