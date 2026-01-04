@@ -72,8 +72,8 @@ const UsersPage = () => {
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
-                <Button icon="pi pi-search" size="small" className="mr-2" tooltip="Dettaglio Utente"  severity="info"    tooltipOptions={{ position: 'top' }} onClick={() => detailsUser(rowData)} />
-                <Button icon="pi pi-pencil" size="small" className="mr-2" tooltip="Modifica Utente"                      tooltipOptions={{ position: 'top' }} onClick={() => editUser(rowData)} />
+                <Button icon="pi pi-search" size="small" className="mr-2" tooltip="Dettaglio Utente" severity="info" tooltipOptions={{ position: 'top' }} onClick={() => detailsUser(rowData)} />
+                <Button icon="pi pi-pencil" disabled={rowData.id == user.id} size="small" className="mr-2" tooltip="Modifica Utente" severity={rowData.id == user.id ? 'secondary' : ''} tooltipOptions={{ position: 'top' }} onClick={() => editUser(rowData)} />
                 {rowData.disabled ?
                 <Button icon="pi pi-user" disabled={rowData.id == user.id} size="small" className="mr-2" tooltip="Abilita Utente"    severity={rowData.id == user.id ? 'secondary' : 'warning'} tooltipOptions={{ position: 'top' }} onClick={() => toggleBan(rowData)} />
                 :
@@ -262,6 +262,9 @@ const UsersPage = () => {
                             className="datatable-responsive"
                             emptyMessage="Nessun utente trovato."
                             filterDisplay="row"
+                            rowsPerPageOptions={[5, 10, 25, 50]}
+                            currentPageReportTemplate="Risultati da {first} a {last} su un Totale {totalRecords}"
+                            paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
                             filters={filters}                       // <--- Usa lo stato dei filtri
                             onFilter={(e) => setFilters(e.filters)} // <--- Aggiorna lo stato al cambio
                         >
