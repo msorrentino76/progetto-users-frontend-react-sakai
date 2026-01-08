@@ -73,7 +73,7 @@ const UsersPage = () => {
         return (
             <React.Fragment>
                 <Button icon="pi pi-search" size="small" className="mr-2" tooltip="Dettaglio Utente" severity="info" tooltipOptions={{ position: 'top' }} onClick={() => detailsUser(rowData)} />
-                <Button icon="pi pi-pencil" disabled={rowData.id == user.id} size="small" className="mr-2" tooltip="Modifica Utente" severity={rowData.id == user.id ? 'secondary' : ''} tooltipOptions={{ position: 'top' }} onClick={() => editUser(rowData)} />
+                <Button icon="pi pi-pencil" size="small" className="mr-2" tooltip="Modifica Utente"                  tooltipOptions={{ position: 'top' }} onClick={() => editUser(rowData)} />
                 {rowData.disabled ?
                 <Button icon="pi pi-user" disabled={rowData.id == user.id} size="small" className="mr-2" tooltip="Abilita Utente"    severity={rowData.id == user.id ? 'secondary' : 'warning'} tooltipOptions={{ position: 'top' }} onClick={() => toggleBan(rowData)} />
                 :
