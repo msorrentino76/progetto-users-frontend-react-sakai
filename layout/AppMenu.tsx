@@ -42,8 +42,9 @@ const AppMenu = () => {
         {
             label: 'Menù Backoffice',
             items: [
-                { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/backoffice/dashboard' },
-                { label: 'Logs', icon: 'pi pi-fw pi-users', to: '/backoffice/logs' },
+                { label: 'Dashboard', icon: 'pi pi-fw pi-home'  , to: '/backoffice/dashboard' },
+                { label: 'Utenti'   , icon: 'pi pi-fw pi-users' , to: '/backoffice/users' },
+                { label: 'Logs'     , icon: 'pi pi-fw pi-align-left', to: '/backoffice/logs' },
             ]
         },
 
