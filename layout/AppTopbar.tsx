@@ -2,16 +2,20 @@
 
 import Link from 'next/link';
 import { classNames } from 'primereact/utils';
-import React, { forwardRef, useContext, useImperativeHandle, useRef } from 'react';
+import React, { forwardRef, useContext, useEffect, useImperativeHandle, useRef } from 'react';
 import { AppTopbarRef } from '@/types';
 import { LayoutContext } from './context/layoutcontext';
 
-import { authService } from '@/services/authService'; 
 import { useAuth } from '@/layout/context/authcontext';
+
+import { authService } from '@/services/authService'; 
+import { notificationsService } from '@/services/notifications/notificationsService'; 
 
 import { confirmDialog, ConfirmDialog } from 'primereact/confirmdialog';
 import { Badge } from 'primereact/badge';
+
 import ProfileSidebar from '../components/common/ProfileSidebar';
+import NotificationsSidebar from '../components/common/NotificationsSidebar';
 
 import { Toast } from 'primereact/toast';
 
@@ -33,6 +37,9 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const [errors, setErrors] = React.useState({});
     const [loadingUserProfile, setLoadingUserProfile] = React.useState(false);
     const [loadingPassword, setLoadingPassword] = React.useState(false);
+
+    const [notificationsVisible, setNotificationsVisible] = React.useState(false);
+    const [countUnreadNotifications, setCountUnreadNotifications] = React.useState(0);
 
     const toast = useRef(null);
 
@@ -90,6 +97,22 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         }
     };
 
+    const fetchUnreadCount = async () => {
+        try {
+            const response = await notificationsService.getUnread();
+            setCountUnreadNotifications(response.data.unread_count);
+        } catch (error) {}
+    };
+
+    useEffect(() => {
+        // 1. Chiamata immediata al caricamento
+        fetchUnreadCount();
+        // 2. Imposta l'intervallo a 60.000 ms (1 minuto)
+        const interval = setInterval(() => {fetchUnreadCount();}, 60000);
+        // 3. Pulizia dell'intervallo alla chiusura del componente
+        return () => clearInterval(interval);
+    }, []);
+    
     return (
         <>
             <style>
@@ -126,6 +149,14 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                     */}
 
                     <button type="button" className="p-link layout-topbar-button" onClick={() => {
+                        setNotificationsVisible(true);
+                    }}>
+                        <i className="pi pi-bell p-overlay-badge">
+                            {countUnreadNotifications > 0 && <Badge value={countUnreadNotifications} severity="danger"></Badge>}
+                        </i>
+                    </button>
+                    
+                    <button type="button" className="p-link layout-topbar-button" onClick={() => {
                         setErrors({});
                         setProfileVisible(true);
                     }}>
@@ -148,6 +179,20 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                     loadingUserProfile={loadingUserProfile}
                     loadingPassword={loadingPassword}
                     errors={errors}
+                />
+
+                <NotificationsSidebar 
+                    visible={notificationsVisible} 
+                    onHide={() => setNotificationsVisible(false)} 
+                    markAllAsRead={async () => {
+                        try {
+                            await notificationsService.markAllAsRead();
+                            setCountUnreadNotifications(0);
+                            setNotificationsVisible(false);
+                        } catch (error) {
+                            //console.error("Errore durante il segnamento di tutte le notifiche come lette:", error);
+                        }
+                    }}
                 />
 
                 <ConfirmDialog />
