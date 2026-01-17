@@ -44,6 +44,7 @@ const AppMenu = () => {
             items: [
                 { label: 'Dashboard', icon: 'pi pi-fw pi-home'  , to: '/backoffice/dashboard' },
                 { label: 'Utenti'   , icon: 'pi pi-fw pi-users' , to: '/backoffice/users' },
+                { label: 'Test PDF' , icon: 'pi pi-fw pi-users' , to: '/backoffice/pdfgenexample' },
                 { label: 'Logs'     , icon: 'pi pi-fw pi-align-left', to: '/backoffice/logs' },
             ]
         },
