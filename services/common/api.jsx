@@ -40,6 +40,33 @@ api.interceptors.request.use(config => {
 api.interceptors.response.use(
     (response) => response,
     (error) => {
+        if (error.response && [401, 419].includes(error.response.status)) {
+            if (typeof window !== 'undefined') {
+                const pathname = window.location.pathname;
+
+                // 1. Definiamo la lista delle pagine "sicure" (whitelist)
+                const publicPages = [
+                    '/auth/login', 
+                    '/auth/forgot-password', 
+                    '/auth/reset-password'
+                ];
+
+                // 2. Controlliamo se la pagina attuale è nella whitelist
+                // Usiamo .some per verificare se il pathname include o è uguale a una delle pagine
+                const isPublicPage = publicPages.some(page => pathname.includes(page));
+
+                if (!isPublicPage) {
+                    window.location.href = '/auth/login';
+                }
+            }
+        }
+        return Promise.reject(error);
+    }
+);
+/*
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
         // 401: Non autorizzato (sessione scaduta o mai fatta)
         // 419: CSRF Token mismatch (sessione scaduta lato server)
         if (error.response && [401, 419].includes(error.response.status)) {
@@ -52,5 +79,6 @@ api.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+*/
 
 export default api;

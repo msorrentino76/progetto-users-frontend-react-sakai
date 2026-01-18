@@ -27,8 +27,9 @@ export const authService = {
      * (Opzionale) Invio email per reset password
      */
     async forgotPassword(email) {
+        console.log('Chiamata a forgotPassword con email:', email);
         await api.get('/sanctum/csrf-cookie');
-        return api.post('/forgot-password', { email });
+        return api.post('/forgot-password', { email: email });
     },
     
     /**

@@ -9,6 +9,8 @@ import { LayoutContext } from '../../../../layout/context/layoutcontext';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 
+import Link from 'next/link';
+
 import { authService } from '@/services/authService'; 
 import { useAuth } from '@/layout/context/authcontext';
 
@@ -105,6 +107,7 @@ const LoginPage = () => {
                                 <label htmlFor="email" className="block text-900 text-xl font-medium mb-2">Email</label>
                                 <InputText 
                                     id="email" 
+                                    disabled={loading}
                                     value={userCredentials.email} 
                                     onChange={(e) => setUserCredentials({...userCredentials, email: e.target.value})}
                                     // Se c'è un errore per 'email', aggiunge la classe p-invalid
@@ -119,6 +122,7 @@ const LoginPage = () => {
                                 <label htmlFor="password" className="block text-900 font-medium text-xl mb-2">Password</label>
                                 <Password 
                                     inputId="password" 
+                                    disabled={loading}
                                     value={userCredentials.password}
                                     onChange={(e) => setUserCredentials({...userCredentials, password: e.target.value})}
                                     toggleMask 
@@ -161,10 +165,10 @@ const LoginPage = () => {
                             </div>
                             */}
 
-                            <div className="flex align-items-center justify-content-between mb-5 gap-5">
-                                <a href='mailto:admin@example.com' className="font-medium no-underline ml-2 text-right cursor-pointer" style={{ color: 'var(--primary-color)' }}>
-                                    Se hai dimenticato la password, <u>contatta l'amministratore.</u>
-                                </a>
+                            <div className="flex align-items-center justify-content-end mb-5 gap-5">
+                                <Link href="/auth/forgot-password" className="font-medium no-underline ml-2 text-right cursor-pointer" style={{ color: 'var(--primary-color)' }}>
+                                    Password dimenticata?
+                                </Link>
                             </div>
 
                             <Button label="Accedi" loading={loading} onClick={onLogin} className="w-full p-3 text-xl"></Button>
